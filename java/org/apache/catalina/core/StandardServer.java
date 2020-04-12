@@ -763,7 +763,7 @@ public final class StandardServer extends LifecycleMBeanBase implements Server {
         // Start our defined Services
         synchronized (servicesLock) {
             for (int i = 0; i < services.length; i++) {
-                services[i].start();
+                services[i].start();//启动service子容器
             }
         }
     }
@@ -843,7 +843,7 @@ public final class StandardServer extends LifecycleMBeanBase implements Server {
                 cl = cl.getParent();
             }
         }
-        // Initialize our defined Services
+        // Initialize our defined Services初始化子容器service
         for (int i = 0; i < services.length; i++) {
             services[i].init();
         }

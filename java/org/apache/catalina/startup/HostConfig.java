@@ -419,12 +419,12 @@ public class HostConfig implements LifecycleListener {
 
         File appBase = host.getAppBaseFile();
         File configBase = host.getConfigBaseFile();
-        String[] filteredAppPaths = filterAppPaths(appBase.list());
-        // Deploy XML descriptors from configBase
+        String[] filteredAppPaths = filterAppPaths(appBase.list());//webapps下app文件夹数组
+        // Deploy XML descriptors from configBase 1. 通过在server.xml中定义webapp路径形式部署
         deployDescriptors(configBase, configBase.list());
-        // Deploy WARs
+        // Deploy WARs 2.以war包形式部署，涉及到解压
         deployWARs(appBase, filteredAppPaths);
-        // Deploy expanded folders
+        // Deploy expanded folders 3.直接把项目文件夹放到webapps下部署
         deployDirectories(appBase, filteredAppPaths);
 
     }
@@ -1033,7 +1033,7 @@ public class HostConfig implements LifecycleListener {
 
                 if (isServiced(cn.getName()) || deploymentExists(cn.getName()))
                     continue;
-
+                //加载webapp：把Context的创建和start以线程形式提交
                 results.add(es.submit(new DeployDirectory(this, cn, dir)));
             }
         }
@@ -1065,7 +1065,7 @@ public class HostConfig implements LifecycleListener {
                     dir.getAbsolutePath()));
         }
 
-        Context context = null;
+        Context context = null;//Context就是每一个app项目
         File xml = new File(dir, Constants.ApplicationContextXml);
         File xmlCopy =
                 new File(host.getConfigBaseFile(), cn.getBaseName() + ".xml");
@@ -1122,7 +1122,7 @@ public class HostConfig implements LifecycleListener {
             context.setPath(cn.getPath());
             context.setWebappVersion(cn.getVersion());
             context.setDocBase(cn.getBaseName());
-            host.addChild(context);
+            host.addChild(context);//此时context还不是完整的，需要进一步封装wrapper也就是servlet
         } catch (Throwable t) {
             ExceptionUtils.handleThrowable(t);
             log.error(sm.getString("hostConfig.deployDir.error",
@@ -1565,7 +1565,7 @@ public class HostConfig implements LifecycleListener {
         }
 
         if (host.getDeployOnStartup())
-            deployApps();
+            deployApps();//部署webapp应用
 
     }
 

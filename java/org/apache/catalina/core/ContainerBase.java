@@ -716,7 +716,7 @@ public abstract class ContainerBase extends LifecycleMBeanBase
                 new PrivilegedAddChild(child);
             AccessController.doPrivileged(dp);
         } else {
-            addChildInternal(child);
+            addChildInternal(child);//进一步调用
         }
     }
 
@@ -740,7 +740,7 @@ public abstract class ContainerBase extends LifecycleMBeanBase
             if ((getState().isAvailable() ||
                     LifecycleState.STARTING_PREP.equals(getState())) &&
                     startChildren) {
-                child.start();
+                child.start();//具体处理某个context进入
             }
         } catch (LifecycleException e) {
             log.error("ContainerBase.addChild: start: ", e);
@@ -881,7 +881,7 @@ public abstract class ContainerBase extends LifecycleMBeanBase
 
     }
 
-
+    //engine组件的初始化，就是创建一个线程池startStopExecutor，这个线程池在engine组件的start阶段调用
     @Override
     protected void initInternal() throws LifecycleException {
         BlockingQueue<Runnable> startStopQueue = new LinkedBlockingQueue<>();
@@ -906,7 +906,7 @@ public abstract class ContainerBase extends LifecycleMBeanBase
     protected synchronized void startInternal() throws LifecycleException {
 
         // Start our subordinate components, if any
-        logger = null;
+            logger = null;
         getLogger();
         Cluster cluster = getClusterInternal();
         if (cluster instanceof Lifecycle) {
@@ -918,7 +918,7 @@ public abstract class ContainerBase extends LifecycleMBeanBase
         }
 
         // Start our child containers, if any
-        Container children[] = findChildren();
+        Container children[] = findChildren();//查找子容器，启动子容器，Host在初始化阶段后还是不完整的需要继续封装，把容器关系维护完整
         List<Future<Void>> results = new ArrayList<>();
         for (int i = 0; i < children.length; i++) {
             results.add(startStopExecutor.submit(new StartChild(children[i])));
@@ -949,7 +949,7 @@ public abstract class ContainerBase extends LifecycleMBeanBase
         }
 
 
-        setState(LifecycleState.STARTING);
+        setState(LifecycleState.STARTING);//设置容器生命周期状态
 
         // Start our thread
         threadStart();
@@ -1409,7 +1409,7 @@ public abstract class ContainerBase extends LifecycleMBeanBase
 
         @Override
         public Void call() throws LifecycleException {
-            child.start();
+            child.start();//StartChild核心逻辑
             return null;
         }
     }

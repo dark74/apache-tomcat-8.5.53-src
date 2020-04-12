@@ -133,6 +133,7 @@ public abstract class LifecycleBase implements Lifecycle {
 
         try {
             setStateInternal(LifecycleState.INITIALIZING, null, false);
+            //init关键处
             initInternal();
             setStateInternal(LifecycleState.INITIALIZED, null, false);
         } catch (Throwable t) {
@@ -420,7 +421,7 @@ public abstract class LifecycleBase implements Lifecycle {
         this.state = state;
         String lifecycleEvent = state.getLifecycleEvent();
         if (lifecycleEvent != null) {
-            fireLifecycleEvent(lifecycleEvent, data);
+            fireLifecycleEvent(lifecycleEvent, data);//触发start生命周期事件
         }
     }
 

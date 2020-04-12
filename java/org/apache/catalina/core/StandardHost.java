@@ -701,7 +701,7 @@ public class StandardHost extends ContainerBase implements Host {
             ContextName cn = new ContextName(context.getDocBase(), true);
             context.setPath(cn.getPath());
         }
-
+        //调用super
         super.addChild(child);
 
     }
@@ -838,7 +838,7 @@ public class StandardHost extends ContainerBase implements Host {
                         errorValve), t);
             }
         }
-        super.startInternal();
+        super.startInternal();//调用父类startInternal()
     }
 
 

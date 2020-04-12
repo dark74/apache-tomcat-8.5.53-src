@@ -215,10 +215,10 @@ public class NioEndpoint extends AbstractJsseEndpoint<NioChannel> {
     public void bind() throws Exception {
 
         if (!getUseInheritedChannel()) {
-            serverSock = ServerSocketChannel.open();
+            serverSock = ServerSocketChannel.open();//获取nio通道channel
             socketProperties.setProperties(serverSock.socket());
             InetSocketAddress addr = (getAddress()!=null?new InetSocketAddress(getAddress(),getPort()):new InetSocketAddress(getPort()));
-            serverSock.socket().bind(addr,getAcceptCount());
+            serverSock.socket().bind(addr,getAcceptCount());//绑定端口但是尚未accept()接收客户端连接
         } else {
             // Retrieve the channel provided by the OS
             Channel ic = System.inheritedChannel();
@@ -481,7 +481,7 @@ public class NioEndpoint extends AbstractJsseEndpoint<NioChannel> {
                     try {
                         // Accept the next incoming connection from the server
                         // socket
-                        socket = serverSock.accept();
+                        socket = serverSock.accept();//acceptor socket接收连接
                     } catch (IOException ioe) {
                         // We didn't get a socket
                         countDownConnection();

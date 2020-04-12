@@ -608,6 +608,7 @@ public class Catalina {
             try {
                 inputSource.setByteStream(inputStream);
                 digester.push(this);
+                //调用digester对象真正去解析xml
                 digester.parse(inputSource);
             } catch (SAXParseException spe) {
                 log.warn("Catalina.start using " + getConfigFile() + ": " +
@@ -685,7 +686,7 @@ public class Catalina {
 
         // Start the new server
         try {
-            getServer().start();
+            getServer().start();//启动server
         } catch (LifecycleException e) {
             log.fatal(sm.getString("catalina.serverStartFail"), e);
             try {

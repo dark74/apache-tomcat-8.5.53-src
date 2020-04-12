@@ -982,10 +982,10 @@ public class StandardWrapper extends ContainerBase
      */
     @Override
     public synchronized void load() throws ServletException {
-        instance = loadServlet();
+        instance = loadServlet();//实例化servlet
 
         if (!instanceInitialized) {
-            initServlet(instance);
+            initServlet(instance);//执行servlet的初始化方法
         }
 
         if (isJspServlet) {
@@ -1041,7 +1041,7 @@ public class StandardWrapper extends ContainerBase
 
             InstanceManager instanceManager = ((StandardContext)getParent()).getInstanceManager();
             try {
-                servlet = (Servlet) instanceManager.newInstance(servletClass);
+                servlet = (Servlet) instanceManager.newInstance(servletClass);//反射实例化servlet
             } catch (ClassCastException e) {
                 unavailable(null);
                 // Restore the context ClassLoader
